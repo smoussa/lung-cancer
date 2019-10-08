@@ -1,0 +1,59 @@
+## Notes
+
+- Uncompressed data is 140GB
+- First convert the DICOM image files into TIFF (or similar) image files
+- Do we have the date / age of the screening? This might determine likelihood of lung cancer
+- No clipping is needed for submitted log-loss values
+- Each image may have a different number of 2D slices and different slice thickness because of machine and patient type.
+    - Can we group by number of 2D slices?
+- Use patient ID as a feature?
+- Need to work with different quality images
+- Two sumbmissions
+- They use hand-annotated locations of nodules, but we can use JH's approach with CNNs to locate nodules?
+- XGBoost
+- Use 3D features rather than 2D features of slices
+- Do we need manual segmentation?
+- Nodules can be one of many classes (benign, malginant cancers, scars, tissue)
+- Case Review Video: https://www.youtube.com/watch?v=-XUKq3B4sdw
+- Pre-trained models
+    - Keras pre-trained models https://github.com/fchollet/deep-learning-models
+    - TensorFlow Inception V3 tutorial https://www.tensorflow.org/tutorials/image_recognition
+    - ResNet and VGG models in TensorFlow https://github.com/tensorflow/models/tree/master/slim
+    - VGG 19 layers https://gist.github.com/baraldilorenzo/8d096f48a1be4a2d660d
+    - TensorFlow FCN https://github.com/MarvinTeichmann/tensorflow-fcn
+- External datasets
+    - LUNA dataset https://luna16.grand-challenge.org/data/
+    - Lung TIME dataset http://cmp.felk.cvut.cz/~dolejm1/lungtime/
+    - CT images of 50 patients with annotations http://www.via.cornell.edu/lungdb.html
+    - https://wiki.cancerimagingarchive.net/display/Public/SPIE-AAPM+Lung+CT+Challenge
+- Papers
+    - U-Net https://arxiv.org/pdf/1505.04597.pdf
+    - Probability of pulmonary nodules paper http://www.nejm.org/doi/pdf/10.1056/NEJMoa1214726
+    - LUNA16 paper for comparing approaches https://arxiv.org/pdf/1612.08012v2.pdf
+    - CT analysis techniques https://pdfs.semanticscholar.org/9f6d/3420bef7d86233f1b18c3799e8eba613d645.pdf
+    - Inception V3 paper https://arxiv.org/pdf/1512.00567.pdf
+- Another competition about medical imaging https://www.kaggle.com/c/ultrasound-nerve-segmentation
+- Nodules have the charactristic of when you pass through a sequence of slices, it appears and disappears *in the same place*. Contast this with a vessel, the vessel will move along a particular path as you pass through the slices.
+- Could we see if the same patient (same ID) has had a follow-up scan and see whether any nodules had grown in size.
+- We could use the position of suspected legions (upper or lower lobe) as a feature
+- Use all of the slices for time-series-like features. We can do this by adding another dimension to the tensor.
+- The Hounsfield Unit (HU) refers to the density of a material
+- LUNA 16 Forum https://luna16.grand-challenge.org/forum/
+- pyqtgraph for 3D plots https://www.kaggle.com/gzuidhof/data-science-bowl-2017/full-preprocessing-tutorial#164021
+- Regions of interests have intensity > 604(-400 HU)
+- Data augmentation
+    - Split lungs image into two (left and right lung)
+    - Rotate, zoom, etc.
+- Because the data is skewed, we should weight the probabilities (loss function) accordingly
+- We could treat each slice in an image as a separate data example (and avoid the inconsistent depth of each scan) and use an ensemble prediction approach that aggregates the predictions from a model for each slice for a patient.
+- Do we need to grayscale the images in the first place?
+- Try using the watershed method for lung segmentation
+- For segmentation, try taking a less destructive box around the lung where the border hits the outer edges of the lung.
+- RNN for moving through slices to see if a blood vessel or nodule is present.
+- Don't zoom with scipy because detail is lost. Just do a running full between slices (OR spline = 0!)
+- Train with two ouputs: class label and location of cancerous nodule (like Jeremy's model)
+- Pseudolabelling
+- Remember to train on entire dataset before submission!
+- Probably want larger filter sizes to capture nodules
+- Extracting images from patients and putting them together into pos and neg is not great. We need to filter out the images without lungs
+- PyramMiD-LSTMs (NIPS 2015) https://www.youtube.com/watch?v=0YLpp_TVhLY&index=1&list=PLPwzH56Rdmq4hcuEMtvBGxUrcQ4cAkoSc (min 14:26)
